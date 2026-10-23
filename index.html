@@ -22,6 +22,173 @@
             margin: 0;
         }
 
+        /* =========================================
+        TECLADO VIRTUAL ARRASTÁVEL (PROPORÇÃO FIXA 67%)
+        ========================================= */
+        #teclado-virtual {
+            position: absolute;
+            left: 293px; /* Centrado nos 1266px do wrapper: (1266 - 680) / 2 */
+            top: 520px;  /* Posição inicial padrão */
+            width: 680px !important; /* Proporção de ~67% cravada em relação à interface */
+            background-color: rgba(108, 117, 183, 0.96);
+            border: 3px solid #ede8e9;
+            border-radius: 16px;
+            padding: 8px 14px 14px 14px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            transition: opacity 0.2s ease;
+            user-select: none;
+            touch-action: none; /* Permite arrastar suavemente no ecrã tátil */
+            box-sizing: border-box;
+        }
+
+        #teclado-virtual.teclado-escondido {
+            opacity: 0;
+            pointer-events: none;
+            display: none !important;
+        }
+
+        /* Barra superior para arrastar o teclado */
+        .teclado-cabecalho {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px 6px 8px;
+            cursor: grab;
+            border-bottom: 1px solid rgba(237, 232, 233, 0.35);
+            margin-bottom: 2px;
+        }
+
+        .teclado-cabecalho:active {
+            cursor: grabbing;
+        }
+
+        .teclado-drag-icone {
+            font-family: 'Nohemi', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #ede8e9;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .teclado-fechar-topo {
+            background: transparent;
+            border: none;
+            color: #ede8e9;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .teclado-fechar-topo:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .teclado-linha {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tecla {
+            position: relative;
+            background-color: #ffffff;
+            border: 2px solid #ede8e9;
+            border-radius: 8px;
+            color: #494949;
+            font-family: 'Nohemi', sans-serif;
+            font-size: 17px; /* Proporcional aos 67% */
+            font-weight: 600;
+            padding: 8px 13px;
+            min-width: 48px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            transition: transform 0.1s, background-color 0.1s;
+            user-select: none;
+        }
+
+        .tecla.tem-acentos::after {
+            content: '••';
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 8px;
+            color: #6c75b7;
+            opacity: 0.65;
+            letter-spacing: 1px;
+        }
+
+        .tecla:active {
+            transform: scale(0.95);
+            background-color: #dce3e8;
+        }
+
+        .tecla-espaco {
+            flex-grow: 1;
+            max-width: 360px;
+        }
+
+        .tecla-acao {
+            background-color: #ede8e9;
+            color: #6c75b7;
+            border-color: #6c75b7;
+            padding: 8px 16px;
+        }
+
+        /* =========================================
+        POP-UP OVERLAY DE ACENTOS (LONG PRESS)
+        ========================================= */
+        .acentos-popup {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ede8e9;
+            border: 2px solid #6c75b7;
+            border-radius: 10px;
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1000001;
+            animation: surgirPopup 0.12s ease-out;
+        }
+
+        .tecla-acento {
+            background-color: #ffffff;
+            border: 2px solid #6c75b7;
+            border-radius: 7px;
+            color: #6c75b7;
+            font-family: 'Nohemi', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            padding: 6px 11px;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .tecla-acento:hover,
+        .tecla-acento:active {
+            background-color: #6c75b7;
+            color: #ffffff;
+            transform: scale(1.08);
+        }
+
+        @keyframes surgirPopup {
+            from { opacity: 0; transform: translate(-50%, 5px) scale(0.9); }
+            to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+
 
 
         /* --- LAYOUT MOBILE  --- */
@@ -206,15 +373,7 @@
                 line-height: 1.2 !important;
             }
             
-            .btn-ver-mais {
-                display: block !important;
-                width: 100% !important;
-                text-align: center !important;
-                padding: 8px !important;
-                font-size: 0.85rem !important;
-                margin-top: 5px !important;
-            }
-            
+         
             /* Botão de fechar */
             .leaflet-popup-close-button {
                 background-color: #2b0e3b !important; 
@@ -284,13 +443,6 @@
                 flex-direction: column !important;
             }
             
-            /* Botão sempre no fundo */
-            .btn-ver-mais {
-                margin-top: auto !important; 
-                margin-bottom: 5px !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-            }
             
             /* Scrollbar elegante */
             .cartao-direita::-webkit-scrollbar {
@@ -304,175 +456,6 @@
                 background: #f1f1f1; 
             }
         }
-
-        /* =========================================
-        TECLADO VIRTUAL ARRASTÁVEL (PROPORÇÃO FIXA 67%)
-        ========================================= */
-        #teclado-virtual {
-            position: absolute;
-            left: 293px; /* Centrado nos 1266px do wrapper: (1266 - 680) / 2 */
-            top: 520px;  /* Posição inicial padrão */
-            width: 680px !important; /* Proporção de ~67% cravada em relação à interface */
-            background-color: rgba(108, 117, 183, 0.96);
-            border: 3px solid #ede8e9;
-            border-radius: 16px;
-            padding: 8px 14px 14px 14px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-            z-index: 100000;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            align-items: center;
-            transition: opacity 0.2s ease;
-            user-select: none;
-            touch-action: none; /* Permite arrastar suavemente no ecrã tátil */
-            box-sizing: border-box;
-        }
-
-        #teclado-virtual.teclado-escondido {
-            opacity: 0;
-            pointer-events: none;
-            display: none !important;
-        }
-
-        /* Barra superior para arrastar o teclado */
-        .teclado-cabecalho {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 8px 6px 8px;
-            cursor: grab;
-            border-bottom: 1px solid rgba(237, 232, 233, 0.35);
-            margin-bottom: 2px;
-        }
-
-        .teclado-cabecalho:active {
-            cursor: grabbing;
-        }
-
-        .teclado-drag-icone {
-            font-family: 'Nohemi', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            color: #ede8e9;
-            letter-spacing: 0.5px;
-            opacity: 0.9;
-            pointer-events: none;
-        }
-
-        .teclado-fechar-topo {
-            background: transparent;
-            border: none;
-            color: #ede8e9;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 6px;
-        }
-
-        .teclado-fechar-topo:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .teclado-linha {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .tecla {
-            position: relative;
-            background-color: #ffffff;
-            border: 2px solid #ede8e9;
-            border-radius: 8px;
-            color: #494949;
-            font-family: 'Nohemi', sans-serif;
-            font-size: 17px; /* Proporcional aos 67% */
-            font-weight: 600;
-            padding: 8px 13px;
-            min-width: 48px;
-            cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-            transition: transform 0.1s, background-color 0.1s;
-            user-select: none;
-        }
-
-        .tecla.tem-acentos::after {
-            content: '••';
-            position: absolute;
-            top: 2px;
-            right: 4px;
-            font-size: 8px;
-            color: #6c75b7;
-            opacity: 0.65;
-            letter-spacing: 1px;
-        }
-
-        .tecla:active {
-            transform: scale(0.95);
-            background-color: #dce3e8;
-        }
-
-        .tecla-espaco {
-            flex-grow: 1;
-            max-width: 360px;
-        }
-
-        .tecla-acao {
-            background-color: #ede8e9;
-            color: #6c75b7;
-            border-color: #6c75b7;
-            padding: 8px 16px;
-        }
-
-        /* =========================================
-        POP-UP OVERLAY DE ACENTOS (LONG PRESS)
-        ========================================= */
-        .acentos-popup {
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ede8e9;
-            border: 2px solid #6c75b7;
-            border-radius: 10px;
-            padding: 5px;
-            display: flex;
-            gap: 5px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            z-index: 1000001;
-            animation: surgirPopup 0.12s ease-out;
-        }
-
-        .tecla-acento {
-            background-color: #ffffff;
-            border: 2px solid #6c75b7;
-            border-radius: 7px;
-            color: #6c75b7;
-            font-family: 'Nohemi', sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-            padding: 6px 11px;
-            cursor: pointer;
-            pointer-events: auto;
-        }
-
-        .tecla-acento:hover,
-        .tecla-acento:active {
-            background-color: #6c75b7;
-            color: #ffffff;
-            transform: scale(1.08);
-        }
-
-        @keyframes surgirPopup {
-            from { opacity: 0; transform: translate(-50%, 5px) scale(0.9); }
-            to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
-        }
-
-
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <title>Mapa ANIMALx</title>
@@ -643,7 +626,7 @@
                     <div id="map"></div> 
                     
                     <!-- WIDGET TEMPORAL -->
-                   <div class="widget-temporal-flutuante" id="widget-tempo">
+                    <div class="widget-temporal-flutuante" id="widget-tempo">
                         <button class="btn-toggle-tempo" id="btn-toggle-tempo" title="Mostrar/Esconder Linha do Tempo">
                             <i class="fas fa-clock"></i> 
                         </button>
@@ -1013,7 +996,6 @@
                             <li><strong>Descrição:</strong> ${props.descricao || ''}</li>
                         </ul>
                                               
-                        <a href="${props.hiperligac || '#'}" target="_blank" class="btn-ver-mais">VER REGISTO COMPLETO</a>
                     </div>
                 </div>
             `;
@@ -1287,12 +1269,7 @@
                     var props = feature.properties;
                     
                     var nomeComum = props.nome_comum ? String(props.nome_comum).toLowerCase() : '';
-                    if (termoPesquisa !== "") {
-                            // 1. Divide a pesquisa por vírgulas e limpa espaços extra
-                            var termos = termoPesquisa.split(',').map(t => t.trim()).filter(t => t !== "");
-                            var corresponde = termos.some(termo => nomeComum.includes(termo));
-                            if (!corresponde) return false;
-                        }
+                    if (termoPesquisa !== "" && !nomeComum.includes(termoPesquisa)) return false;
 
                     var categoriaPonto = getCategoriaRegisto(props);
                     if (filtroRegistoAtivo !== 'todos' && categoriaPonto !== filtroRegistoAtivo) return false;
@@ -1521,8 +1498,9 @@
                     }, 500);
                 }
             });
-        </script>   
-<!-- LÓGICA DO TECLADO VIRTUAL DO MAPA -->
+        </script>  
+        
+        <!-- LÓGICA DO TECLADO VIRTUAL DO MAPA -->
         <script>
         (function() {
             let inputAtivo = null;
